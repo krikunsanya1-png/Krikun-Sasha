@@ -1,0 +1,173 @@
+<title>Космічні питання «Why»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: одна колонка звіту ~920px; таблиця конкурентів, далі блоки «чому працює», ідеї, обмеження */
+:root{
+  --bg:#f5f6fa; --surface:#ffffff; --ink:#151a2e; --muted:#5b6380; --line:#dfe2ec;
+  --accent:#b8740f; --accent-soft:#fbf0dc; --link:#2c4fb8;
+  --new:#1f8a5b; --new-soft:#ddf3e8; --mid:#a86a00; --mid-soft:#fdf0d6; --old:#c2482e; --old-soft:#fbe3dc;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1020; --surface:#151a2e; --ink:#e7e9f3; --muted:#9aa1bd; --line:#2a3150;
+  --accent:#e9a63c; --accent-soft:#3a2a10; --link:#8fa8ff;
+  --new:#4fd197; --new-soft:#123a2a; --mid:#f0b54a; --mid-soft:#3a2c0f; --old:#ff8a6e; --old-soft:#3d1c15; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1020; --surface:#151a2e; --ink:#e7e9f3; --muted:#9aa1bd; --line:#2a3150;
+  --accent:#e9a63c; --accent-soft:#3a2a10; --link:#8fa8ff;
+  --new:#4fd197; --new-soft:#123a2a; --mid:#f0b54a; --mid-soft:#3a2c0f; --old:#ff8a6e; --old-soft:#3d1c15; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding:40px 16px 64px}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.2;font-weight:700}
+h2{font-size:19px;font-weight:500;padding-bottom:10px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:0;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.sub{color:var(--muted);font-size:14px;margin-top:10px}
+section{display:flex;flex-direction:column;gap:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:700;display:block}
+.stat span{color:var(--muted);font-size:13px;line-height:1.4;display:block;margin-top:4px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+th{background:var(--ink);color:var(--bg);text-align:left;font-weight:500;padding:9px 10px;font-size:12.5px;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.n b{font-weight:600}
+td small{color:var(--muted);display:block;font-size:12px;line-height:1.4;margin-top:2px}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.p-new{background:var(--new-soft);color:var(--new)} .p-mid{background:var(--mid-soft);color:var(--mid)} .p-old{background:var(--old-soft);color:var(--old)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);align-items:center}
+.factors{display:flex;flex-direction:column;gap:22px}
+.factor{display:grid;grid-template-columns:44px 1fr;gap:14px}
+.factor .num{font-family:var(--f-display);font-size:22px;color:var(--accent);font-weight:700;line-height:1.2}
+.factor > div{min-width:0;display:flex;flex-direction:column;gap:8px}
+.ev{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:12px;display:flex;flex-direction:column;gap:3px}
+.ev .t{color:var(--ink)}
+code,.mono{font-family:var(--f-mono);font-size:12.5px;background:var(--accent-soft);padding:1px 6px;border-radius:4px;white-space:nowrap}
+.styles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{font-size:14px}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.ideas li{font-size:14.5px}
+.ideas em{color:var(--muted);font-style:normal;font-size:13px}
+.foot{color:var(--muted);font-size:12.5px}
+@media (max-width:520px){.factor{grid-template-columns:1fr;gap:4px}}
+</style><style>
+.q{display:grid;grid-template-columns:44px 1fr;gap:14px;padding-block:16px;border-top:1px solid var(--line)}
+.q:first-child{border-top:0}
+.qn{font-family:var(--f-display);font-size:22px;color:var(--accent);font-weight:700;line-height:1.2}
+.qb{min-width:0;display:flex;flex-direction:column;gap:8px}
+.qb h3{font-size:16.5px;font-family:var(--f-body)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);align-items:center}
+.ex{font-size:13.5px;gap:4px}
+.ex .mono{white-space:nowrap}
+.formulas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.kw{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:520px){.q{grid-template-columns:1fr;gap:4px}}
+</style>
+<div class="wrap">
+<header>
+  <h1>Що люди питають про космос: англомовні запити «Why…»</h1>
+  <p class="sub">Аналіз від 7 жовтня 2026 · англомовні відео з «why» у назві, 2022–2026, від 30–80k переглядів · база Nexlev, близько 4 200 відео «Why…», з них 247 про космос · відсіяно гру, музику, езотерику та фантастичні оповідання</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>8 питань</b><span>збирають більшість переглядів серед космічних «Why…» відео</span></div>
+  <div class="stat"><b>16,6M</b><span>сумарно у кластері «Чому неможливо долетіти / покинути Сонячну систему»</span></div>
+  <div class="stat"><b>8 каналів</b><span>окремо зняли «Why is space cold if the Sun is hot». Це ознака стабільного пошукового попиту</span></div>
+  <div class="stat"><b>1,6M</b><span>«Why can't we go above the Solar System?» Тема Riddle, а конкурентів у ній мало</span></div>
+</div>
+
+<section>
+  <h2>Як я це рахувала</h2>
+  <p>Прямі дані автопідказок Google і YouTube отримати не вдалося: мережа цього середовища блокує ці сервіси. Тому я рахувала попит через те, що люди дивляться. Я зібрала з бази Nexlev англомовні відео, у назві яких є «why» і космічне слово, і згрупувала їх за питанням. Питання сильне, якщо на нього відповідає багато різних каналів і кожен збирає перегляди. Це не обсяг пошуку в Google, а перегляди відповідей на YouTube. Обсяг пошуку варто перевірити у VidIQ за списком ключових фраз унизу.</p>
+</section>
+
+<section>
+  <h2>8 найпопулярніших питань «Why» про космос</h2>
+  <div class="legend">
+    <span><span class="pill p-new">вічнозелене</span> попит не залежить від новин</span>
+    <span><span class="pill p-mid">тренд</span> підігрітий подією (Artemis II, квітень 2026)</span>
+    <span><span class="pill p-old">клікбейт</span> працює, але це конспірологічний жанр</span>
+  </div>
+  <div><div class="q"><div class="qn">1</div><div class="qb">
+<h3>Why can't we go back to the Moon? / Why are we going back?</h3>
+<div class="meta"><span class="pill p-mid">тренд</span><span>Місяць, Artemis II</span><span>відео в базі: <b>43</b></span><span>сума переглядів: <b>11,0M</b></span><span>медіана: <b>98k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=qry7plsXXEo">60 Years Without Returning to the Moon, Why Are We Going Back Now?</a> <span class="mono">2,0M</span></li><li><a href="https://www.youtube.com/watch?v=0quIB8aCWkQ">…Why NASA Has Never Returned to the Moon!</a> <span class="mono">1,5M</span></li><li><a href="https://www.youtube.com/watch?v=EM87VOG3rDU">Apollo Astronaut Charles Duke Explains Why Humans Never Returned to the Moon</a> <span class="mono">759k</span></li></ul></div></div>
+<div class="q"><div class="qn">2</div><div class="qb">
+<h3>Why is it impossible to fly to / return from [planet]? Why will we never leave the Solar System?</h3>
+<div class="meta"><span class="pill p-new">серія</span><span>неможливість польотів</span><span>відео в базі: <b>26</b></span><span>сума переглядів: <b>16,6M</b></span><span>медіана: <b>101k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=Cyl3X88KEgg">Why Humanity Will Never Leave The Solar System (Kurzgesagt)</a> <span class="mono">10,0M</span></li><li><a href="https://www.youtube.com/watch?v=99nqxusWezo">Why It's Impossible to Fly to the Planets of the Solar System (Miralex)</a> <span class="mono">1,8M</span></li><li><a href="https://www.youtube.com/watch?v=CNbJlgSzG0Y">Why Is It Impossible to Return From Jupiter?</a> <span class="mono">454k</span></li></ul></div></div>
+<div class="q"><div class="qn">3</div><div class="qb">
+<h3>Why is space cold if the Sun is so hot?</h3>
+<div class="meta"><span class="pill p-new">вічнозелене</span><span>парадокс</span><span>відео в базі: <b>8</b></span><span>сума переглядів: <b>1,6M</b></span><span>медіана: <b>143k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=R3f2xr8t5f0">Why Is Space So Cold When the Sun and Billions Of Stars Are So Hot</a> <span class="mono">436k</span></li><li><a href="https://www.youtube.com/watch?v=wZMyWw9sW2k">Why Is Space Cold If The Sun Is Hot (Miralex)</a> <span class="mono">324k</span></li><li><a href="https://www.youtube.com/watch?v=YQ7DWNhjOpk">Why Is the Closest Planet to the Sun So Cold? (Astrum)</a> <span class="mono">2,1M</span></li></ul></div></div>
+<div class="q"><div class="qn">4</div><div class="qb">
+<h3>Why is space dark if it's full of stars? Why are there no stars in space photos?</h3>
+<div class="meta"><span class="pill p-new">вічнозелене</span><span>парадокс</span><span>відео в базі: <b>6</b></span><span>сума переглядів: <b>2,8M</b></span><span>медіана: <b>186k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=H68KHvdMHiY">Why Are There No Stars In Space?</a> <span class="mono">1,6M</span></li><li><a href="https://www.youtube.com/watch?v=kJHvqbRLuKw">Why Is the Sky Dark? (It Shouldn't Be) (ABISMO)</a> <span class="mono">591k</span></li><li><a href="https://www.youtube.com/watch?v=Q2MQJPxITNs">Why Is Space So Dark If It's Full Of Bright Stars (Miralex)</a> <span class="mono">211k</span></li></ul></div></div>
+<div class="q"><div class="qn">5</div><div class="qb">
+<h3>Why can't humans live on Mars / survive in deep space?</h3>
+<div class="meta"><span class="pill p-new">вічнозелене</span><span>виживання</span><span>відео в базі: <b>8</b></span><span>сума переглядів: <b>3,7M</b></span><span>медіана: <b>399k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=NXoRuTnykVE">Why Can't Humans Live On Mars?</a> <span class="mono">1,2M</span></li><li><a href="https://www.youtube.com/watch?v=rOXfv0DuHno">Why Mars Is Not Ready for Humans (StarTalk)</a> <span class="mono">749k</span></li><li><a href="https://www.youtube.com/watch?v=hbVWLHTvheA">Why Humans Can't Survive Deep Space (Cosmic Signal, 6k підп.)</a> <span class="mono">691k</span></li></ul></div></div>
+<div class="q"><div class="qn">6</div><div class="qb">
+<h3>Why can't we go “above” or “below” the Solar System? Why is it flat?</h3>
+<div class="meta"><span class="pill p-new">мало конкурентів</span><span>над і під Сонцем</span><span>відео в базі: <b>5</b></span><span>сума переглядів: <b>2,6M</b></span><span>медіана: <b>242k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=Of7PWHzGjww">Why Can't We Go “Above” the Solar System?</a> <span class="mono">1,6M</span></li><li><a href="https://www.youtube.com/watch?v=AdG4_kwcyBs">Why Escaping the Solar System's Flat Plane Is Almost Impossible (7k підп.)</a> <span class="mono">430k</span></li><li><a href="https://www.youtube.com/watch?v=2GrGr6oJlhs">Why Is the Solar System So Flat? (Ridddle)</a> <span class="mono">242k</span></li></ul></div></div>
+<div class="q"><div class="qn">7</div><div class="qb">
+<h3>Why is NASA afraid of / silent about [Jupiter, 3I/ATLAS, Europa]?</h3>
+<div class="meta"><span class="pill p-old">клікбейт</span><span>«NASA боїться»</span><span>відео в базі: <b>22</b></span><span>сума переглядів: <b>4,4M</b></span><span>медіана: <b>94k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=IT9t1BQVW9A">Why NASA is still afraid to go to Jupiter</a> <span class="mono">1,1M</span></li><li><a href="https://www.youtube.com/watch?v=5mn93t224Ms">Comet or Alien Craft? Why NASA Can't Explain 3I/Atlas</a> <span class="mono">876k</span></li><li><a href="https://www.youtube.com/watch?v=QaWDFYQIbms">Why NASA Is Scared To Go Deeper Into Jupiter (30k підп.)</a> <span class="mono">306k</span></li></ul></div></div>
+<div class="q"><div class="qn">8</div><div class="qb">
+<h3>Why is the universe so silent? Why haven't we found aliens?</h3>
+<div class="meta"><span class="pill p-new">вічнозелене</span><span>парадокс Фермі</span><span>відео в базі: <b>11</b></span><span>сума переглядів: <b>2,2M</b></span><span>медіана: <b>118k</b></span></div>
+<ul class="ex"><li><a href="https://www.youtube.com/watch?v=EV-OaUoIPpI">Why We Should NOT Look For Aliens? Why Can't We See Evidence of Alien Life?</a> <span class="mono">533k</span></li><li><a href="https://www.youtube.com/watch?v=DQyyd4AUUYw">The Fermi Paradox: Why the Universe is Silent</a> <span class="mono">318k</span></li><li><a href="https://www.youtube.com/watch?v=wwPDRfk9NpA">Why It's IMPOSSIBLE for Aliens to Ever Visit Earth</a> <span class="mono">131k</span></li></ul></div></div>
+</div>
+</section>
+
+<section>
+  <h2>Три формули питань, що працюють найкраще</h2>
+  <div class="formulas">
+    <div class="card"><h3>Парадокс: «Why is X so … if …?»</h3><p>Питання, де два знайомі факти суперечать один одному. Глядач сам колись про це думав і хоче почути відповідь.</p><p class="mono" style="white-space:normal">Why is space cold if the Sun is hot · Why is the closest planet to the Sun so cold · Why is space dark if it's full of stars</p></div>
+    <div class="card"><h3>Неможливість: «Why it's impossible to … / Why can't we …»</h3><p>Найбільший кластер за переглядами. Добре розкладається на серію: міняється лише планета або напрямок.</p><p class="mono" style="white-space:normal">Why it's impossible to return from Jupiter · Why can't we go above the Solar System · Why humanity will never leave the Solar System</p></div>
+    <div class="card"><h3>Обмеження людини: «Why can't humans …»</h3><p>Питання про тіло людини в космосі: виживання, радіація, повернення з Марса. Особисто стосується глядача, тому добре клікається.</p><p class="mono" style="white-space:normal">Why can't humans live on Mars · Why humans can't survive deep space · Why astronauts who go to Mars will never come back</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Що з цього взяти для каналу</h2>
+  <ul>
+    <li><b>«Над і під Сонячною системою»</b> має найкраще співвідношення попиту й конкуренції: 1,6M у топ-відео, а відео на цю тему знайшлося лише п’ять. Це пряма тема Riddle («Why We Can Reach Pluto But Can't Fly Above the Sun»).</li>
+    <li><b>Парадокси «холодно / темно»</b> вічнозелені. Їх знімають навіть sleep-канали у двогодинному форматі (Calm Space, 254k). Можна зробити одне відео, що відповідає на три парадокси одразу: холод, темрява, Меркурій.</li>
+    <li><b>Серія «Why it's impossible to return from [planet]»</b>: у Ao Infinito e Além Юпітер має 454k, Меркурій 305k, Плутон 209k. Формулювання «return from» англійською зайняте менше, ніж «fly to».</li>
+    <li><b>Місяць і Artemis</b> мають найбільше відео, але це новинна хвиля, і на ній уже великі канали. Брати лише з власним кутом, наприклад «чому з Місяця важче повернутися, ніж долетіти».</li>
+    <li>Кластер «NASA боїться / мовчить» збирає перегляди, але це конспірологія. Він може зашкодити довірі до науково-популярного каналу.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Ключові фрази для перевірки обсягу пошуку у VidIQ</h2>
+  <div class="kw">
+    <code>why is space cold</code><code>why is space black</code><code>why is space dark</code><code>why are there no stars in space</code><code>why can't we go back to the moon</code><code>why can't humans live on mars</code><code>why can't we leave the solar system</code><code>why is the solar system flat</code><code>what is above the solar system</code><code>why is it impossible to go to jupiter</code><code>why can't humans survive in space</code><code>why is mercury cold</code><code>why is the universe silent</code><code>why haven't we found aliens</code><code>why is the moon moving away</code><code>why is space silent</code>
+  </div>
+</section>
+
+<section>
+  <h2>Обмеження</h2>
+  <ul>
+    <li>Це не обсяг пошуку в Google чи YouTube. Я рахувала перегляди відео, що відповідають на питання. Автопідказки Google і YouTube заблоковані в цьому середовищі, а відкритих даних про обсяг пошуку саме космічних «why» в інтернеті не знайшлося.</li>
+    <li>У базі Nexlev частина назв перекладена англійською автоматично (корейські, португальські, іспанські канали з мовними доріжками). Такі відео я лишила, бо англомовний глядач бачить саме цю назву.</li>
+    <li>Великі канали (Kurzgesagt, StarTalk, Astrum) завищують суму переглядів кластера. Тому поруч зі сумою наведено медіану.</li>
+    <li>Розподіл за кластерами автоматичний, за ключовими словами в назві. Окремі відео можуть потрапити не в той кластер.</li>
+  </ul>
+</section>
+
+<p class="foot">Підготовлено 07.10.2026. Джерело даних: Nexlev (пошук відео за точною фразою в назві, сортування за переглядами).</p>
+</div>
