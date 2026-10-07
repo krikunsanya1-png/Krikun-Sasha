@@ -1,0 +1,151 @@
+<title>Сценарій: вода біля Юпітера</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: одна колонка звіту ~920px; таблиця конкурентів, далі блоки «чому працює», ідеї, обмеження */
+:root{
+  --bg:#f5f6fa; --surface:#ffffff; --ink:#151a2e; --muted:#5b6380; --line:#dfe2ec;
+  --accent:#b8740f; --accent-soft:#fbf0dc; --link:#2c4fb8;
+  --new:#1f8a5b; --new-soft:#ddf3e8; --mid:#a86a00; --mid-soft:#fdf0d6; --old:#c2482e; --old-soft:#fbe3dc;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1020; --surface:#151a2e; --ink:#e7e9f3; --muted:#9aa1bd; --line:#2a3150;
+  --accent:#e9a63c; --accent-soft:#3a2a10; --link:#8fa8ff;
+  --new:#4fd197; --new-soft:#123a2a; --mid:#f0b54a; --mid-soft:#3a2c0f; --old:#ff8a6e; --old-soft:#3d1c15; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1020; --surface:#151a2e; --ink:#e7e9f3; --muted:#9aa1bd; --line:#2a3150;
+  --accent:#e9a63c; --accent-soft:#3a2a10; --link:#8fa8ff;
+  --new:#4fd197; --new-soft:#123a2a; --mid:#f0b54a; --mid-soft:#3a2c0f; --old:#ff8a6e; --old-soft:#3d1c15; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding:40px 16px 64px}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.2;font-weight:700}
+h2{font-size:19px;font-weight:500;padding-bottom:10px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:0;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.sub{color:var(--muted);font-size:14px;margin-top:10px}
+section{display:flex;flex-direction:column;gap:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:700;display:block}
+.stat span{color:var(--muted);font-size:13px;line-height:1.4;display:block;margin-top:4px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+th{background:var(--ink);color:var(--bg);text-align:left;font-weight:500;padding:9px 10px;font-size:12.5px;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.n b{font-weight:600}
+td small{color:var(--muted);display:block;font-size:12px;line-height:1.4;margin-top:2px}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.p-new{background:var(--new-soft);color:var(--new)} .p-mid{background:var(--mid-soft);color:var(--mid)} .p-old{background:var(--old-soft);color:var(--old)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);align-items:center}
+.factors{display:flex;flex-direction:column;gap:22px}
+.factor{display:grid;grid-template-columns:44px 1fr;gap:14px}
+.factor .num{font-family:var(--f-display);font-size:22px;color:var(--accent);font-weight:700;line-height:1.2}
+.factor > div{min-width:0;display:flex;flex-direction:column;gap:8px}
+.ev{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:12px;display:flex;flex-direction:column;gap:3px}
+.ev .t{color:var(--ink)}
+code,.mono{font-family:var(--f-mono);font-size:12.5px;background:var(--accent-soft);padding:1px 6px;border-radius:4px;white-space:nowrap}
+.styles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{font-size:14px}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.ideas li{font-size:14.5px}
+.ideas em{color:var(--muted);font-style:normal;font-size:13px}
+.foot{color:var(--muted);font-size:12.5px}
+@media (max-width:520px){.factor{grid-template-columns:1fr;gap:4px}}
+</style><style>
+.q{display:grid;grid-template-columns:44px 1fr;gap:14px;padding-block:16px;border-top:1px solid var(--line)}
+.q:first-child{border-top:0}
+.qn{font-family:var(--f-display);font-size:22px;color:var(--accent);font-weight:700;line-height:1.2}
+.qb{min-width:0;display:flex;flex-direction:column;gap:8px}
+.qb h3{font-size:16.5px;font-family:var(--f-body)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);align-items:center}
+.ex{font-size:13.5px;gap:4px}
+.ex .mono{white-space:nowrap}
+.formulas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.kw{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:520px){.q{grid-template-columns:1fr;gap:4px}}
+</style><style>
+.tl{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.tl-row{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:14px 16px;border-top:1px solid var(--line)}
+.tl-row:first-child{border-top:0}
+.tl-t{font-family:var(--f-mono);font-size:12.5px;color:var(--accent);font-variant-numeric:tabular-nums;padding-top:2px}
+.tl-b{min-width:0;display:flex;flex-direction:column;gap:6px}
+.tl-b h3{font-size:15.5px}
+.tl-b p{font-size:14px}
+.tl-b .dev{font-size:12.5px;color:var(--muted)}
+.bar{display:flex;height:28px;border-radius:6px;overflow:hidden;border:1px solid var(--line);font-size:11.5px;font-family:var(--f-mono)}
+.bar span{display:flex;align-items:center;justify-content:center;color:var(--bg);white-space:nowrap;overflow:hidden;padding:0 4px}
+.b1{background:var(--muted)}.b2{background:var(--accent)}.b3{background:var(--new)}.b4{background:var(--link)}.b5{background:var(--old)}.b6{background:var(--ink)}
+.chk{color:var(--old);font-weight:600;font-size:12px}
+.quote{border-left:2px solid var(--accent);padding-left:12px;font-size:14px;color:var(--ink);font-style:italic}
+@media (max-width:520px){.tl-row{grid-template-columns:1fr;gap:4px}}
+</style>
+<div class="wrap">
+<header>
+  <h1>Від Riddle до Юпітера: розбір сценарію і структура нового відео</h1>
+  <p class="sub">7 жовтня 2026 · референс: Ridddle «Why Space Travel is Actually Impossible» (24:39, 3,2M переглядів) · тема нового відео: вода під кригою супутників Юпітера, «переселяємось не на Марс, а до Юпітера»</p>
+</header>
+
+<section>
+  <h2>Частина 1. Як побудоване відео Riddle</h2>
+  <p>Я розібрала транскрипт по блоках. Близько 3 450 слів за 24,6 хвилини, тобто приблизно 140 слів на хвилину. Відео побудоване як чотири акти. Між актами стоять заперечення, які ведучий проговорює голосом глядача.</p>
+  <div class="bar" role="img" aria-label="Розподіл часу: хук 8%, драбина відстаней 22%, швидкості 14%, інженерія 18%, фізика 28%, фінал 10%">
+    <span class="b1" style="width:8%">хук</span><span class="b2" style="width:22%">драбина відстаней</span><span class="b3" style="width:14%">швидкості</span><span class="b4" style="width:18%">інженерія</span><span class="b5" style="width:28%">фізика: «чому»</span><span class="b6" style="width:10%">фінал</span>
+  </div>
+  <div class="tl"><div class="tl-row"><div class="tl-t">0:00–1:30</div><div class="tl-b"><h3>Хук: відомий факт, а тоді переворот</h3><p>«Нічого не швидше за світло, воно облітає Землю 7,5 раза за секунду». Далі масштаб росте: 8 хвилин від Сонця, 4 роки від Проксими, 100 000 років через галактику, 2 трильйони галактик. Переворот: світло не повільне, це Всесвіт абсурдно великий для нашого мозку.</p><p class="dev">Прийом: почати з того, що глядач уже знає, і за 60 секунд перевернути. Теза відео звучить на 1:20.</p></div></div><div class="tl-row"><div class="tl-t">1:30–2:00</div><div class="tl-b"><h3>Проблема і обіцянка</h3><p>«Сказати „Всесвіт величезний“ нічого не пояснює. Мільйон кілометрів чи мільярд мозку однаково». Обіцянка: перевести відстані в людський вимір, а саме в час очікування відповіді на повідомлення.</p><p class="dev">Прийом: назвати, чому звичайні пояснення не працюють, і дати одну наскрізну метафору.</p></div></div><div class="tl-row"><div class="tl-t">2:00–7:00</div><div class="tl-b"><h3>Акт 1. Драбина відстаней в одній метафорі</h3><p>Переписка з Місяцем: 1,3 с, як поганий відеодзвінок. Марс: 3–22 хв, вже голосові повідомлення, «сходи в зал, подивись пару відео Riddle». Voyager 1: майже 2 доби на підтвердження. Проксима: дитина народилася, а відповідь прийшла, коли вона в 3 класі, наступна — коли вступає в коледж. Центр галактики: 52 000 років. Андромеда: повідомлення відправили до появи роду Homo.</p><p class="dev">Прийом: кожен щабель більший за попередній і закінчується жартом. Дрібні відступи по ходу (звук у вакуумі, що таке світловий рік).</p></div></div><div class="tl-row"><div class="tl-t">7:00–7:30</div><div class="tl-b"><h3>Заперечення глядача №1, повторний хук</h3><p>«Окей, ми зрозуміли, світло повільне. Але чи можемо ми хоча б долетіти до найближчої зірки?» Ведучий знижує очікування: «скільки летіти хоча б один світловий рік?»</p><p class="dev">Прийом: голосом глядача закрити одну частину і відкрити наступну.</p></div></div><div class="tl-row"><div class="tl-t">7:30–11:00</div><div class="tl-b"><h3>Акт 2. Наші реальні швидкості</h3><p>Parker Solar Probe, 191 км/с, але з підступом: це швидкість падіння на Сонце. Voyager 1, 17 км/с: 18 000 років на один світловий рік, і ми все ще в хмарі Оорта, «навіть з подвір’я не виїхали». До Проксими 75 000 років, тобто близько 3 000 поколінь. Тут же вставка з котом Baby, який нявкає у кадрі.</p><p class="dev">Прийом: рекорд, а тоді «але є підступ». Особиста вставка олюднює ведучого посередині відео.</p></div></div><div class="tl-row"><div class="tl-t">11:00–14:30</div><div class="tl-b"><h3>Заперечення №2 і Акт 3: інженерія</h3><p>«Просто зробимо більшу ракету». Відповідь — тиранія рівняння Ціолковського: паливо, щоб везти паливо. Потім гальмування: в космосі немає асфальту й повітря, гальмівне паливо теж треба везти. Потім пил: на 20% швидкості світла піщинка вдаряє як куля. Щоразу петля: більше маси, більше палива.</p><p class="dev">Прийом: повторюваний рефрен-петля. Формулу показують на екрані й одразу «не будемо занудствувати».</p></div></div><div class="tl-row"><div class="tl-t">14:30–15:30</div><div class="tl-b"><h3>Заперечення №3: фантастика</h3><p>«Колись винайдемо гіпердвигун, як у Star Wars, Star Trek, Mass Effect». Ведучий погоджується: «припустімо, ми розв’язали всю інженерію». І тут же: «справжній бар’єр не в кресленнях, він вбудований у простір і час».</p><p class="dev">Прийом: steelman, тобто віддати глядачеві найсильніший аргумент, а тоді показати, що проблема глибша.</p></div></div><div class="tl-row"><div class="tl-t">15:30–22:30</div><div class="tl-b"><h3>Акт 4. Глибинне «чому»</h3><p>Швидкість світла — властивість простору-часу, а не рекорд світла. Модель: у кожного тіла фіксована швидкість, яку воно ділить між рухом у просторі й у часі (йдеш на північ, звертаєш на схід). Диван і кухня, 99% швидкості світла: 1 рік для мандрівника проти 7 на Землі. Для фотона час не йде. Світловий конус, причинність, «прибудеш раніше, ніж вилетів». Нескінченна енергія.</p><p class="dev">Прийом: складна фізика через побутову ментальну модель із чесним застереженням «це не буквальний опис».</p></div></div><div class="tl-row"><div class="tl-t">22:30–24:39</div><div class="tl-b"><h3>Фінал: від відчаю до гордості</h3><p>Синтез: між світами немає спільного «зараз», ми ізольовані. Розворот: «розгублені мавпочки на крихітному камені все це зрозуміли… і, можливо, колись знайдуть обхід. Бо ми неймовірні».</p><p class="dev">Прийом: закінчити не безнадією, а теплою емоцією.</p></div></div></div>
+</section>
+
+<section>
+  <h2>8 прийомів, які варто забрати</h2>
+  <ul>
+    <li><b>Одна наскрізна метафора на весь перший акт:</b> «скільки чекати відповіді на повідомлення». Кожна нова відстань — та сама метафора, тільки більша.</li>
+    <li><b>Людський масштаб замість цифр:</b> вік дитини, покоління, «до появи Homo».</li>
+    <li><b>Заперечення глядача як перехід між актами:</b> «окей, ми зрозуміли, але…» звучить тричі. Кожне відкриває новий акт і знижує очікування.</li>
+    <li><b>«Рекорд + підступ»:</b> Parker найшвидший, але це швидкість падіння.</li>
+    <li><b>Рефрен-петля:</b> більше маси, більше палива, ще більше маси.</li>
+    <li><b>Steelman:</b> «припустімо, ми розв’язали всю інженерію». Проблема виявляється глибшою за техніку.</li>
+    <li><b>Розмовна мова і самоіронія:</b> жарти, сленг, «подивись пару відео Riddle», кіт у кадрі.</li>
+    <li><b>Фінал-розворот:</b> від «ми ізольовані» до «ми неймовірні».</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Частина 2. Що вже є на цю тему</h2>
+  <ul>
+    <li><b>Юпітер добре продається:</b> «Why Jupiter is The Scariest Planet» (Cosmicus) має 2,07M, «Why NASA is still afraid to go to Jupiter» — 1,1M, «Jupiter Is Getting Weird» (BRIGHT SIDE SPACE NEWS) — 515k, «Por qué es imposible viajar a Júpiter» (ABISMO) — 410k.</li>
+    <li><b>Кут «вода й життя на Європі» серед невеликих каналів майже порожній.</b> Знайшовся один помітний хіт: «What James Webb Just Found on Europa Is Impossible» (Lone Colonist, 13,5k підписників) — 156k. Окремих відео «де ще є вода в Сонячній системі» з великими переглядами я не знайшла.</li>
+    <li><b>Новина свіжа і суперечлива, а це добре для сценарію.</b> У січні 2026 вийшли два дослідження з протилежними висновками: <a href="https://astrobiology.com/2026/01/21/study-suggests-a-pathway-for-life-sustaining-conditions-in-europas-ocean/">шлях поживних речовин в океан Європи</a> і <a href="https://www.sciencedaily.com/releases/2026/01/260107221836.htm">сумнів, що там є енергія для життя</a>.</li>
+    <li><b>Хук через кіно:</b> «Проєкт „Аве Марія“» з Райаном Ґослінгом — <a href="https://jang.com.pk/en/62222-project-hail-mary-scores-805m-at-box-office-biggest-opening-of-2026-news">найбільший старт 2026 року, $80,5M</a>. Тема свіжа в пам’яті глядача.</li>
+    <li><b>Дати місій для фіналу:</b> <a href="https://science.nasa.gov/image-detail/europaclipper-arrivaldate">Europa Clipper прибуває 11 квітня 2030</a>. JUICE прибуває 2031 і виходить на орбіту Ганімеда в грудні 2034.</li>
+  </ul>
+  <p class="quote">Важливо: «переселяємось на Юпітер» буквально неможливо, бо в Юпітера немає поверхні. Це варто обіграти в хуку як ще один переворот, а не ховати.</p>
+</section>
+
+<section>
+  <h2>Частина 3. Структура нового відео за скелетом Riddle</h2>
+  <p>Робоча назва: <b>«Чому ми переселимось не на Марс, а до Юпітера (і чому це майже неможливо)»</b>. Варіант: «Під кригою Європи води більше, ніж на Землі. Чому ми досі не там?». Цільова довжина 20–23 хвилини, тобто близько 2 900–3 200 слів у темпі Riddle.</p>
+  <div class="tl"><div class="tl-row"><div class="tl-t">0:00–1:30</div><div class="tl-b"><h3>Хук: «Ми пакуємо валізи не на ту планету»</h3><p>Відомий факт: усі плани (Маск, NASA) про Марс. Переворот: у 2026 році нові моделі показали, що під кригою Європи й Ганімеда може бути більше води, ніж в усіх океанах Землі, і умови там можуть підходити для мікробів. Теза: вода — найцінніший ресурс у космосі, і її повно. Але майже вся вона у формі, з якої не нап’єшся.</p><p class="dev">Як у Riddle: знайомий факт, переворот, теза до 1:30. Одразу чесно: «на сам Юпітер не сядеш, у нього немає поверхні, йдеться про його супутники». Це ще один переворот.</p></div></div><div class="tl-row"><div class="tl-t">1:30–2:30</div><div class="tl-b"><h3>Проблема і наскрізна метафора</h3><p>«Там є вода» нічого не означає: лід, пара, розсіл, кілометри під землею. Метафора: ми ріелтори Сонячної системи, ходимо на перегляди «квартир» і на кожному питаємо одне: де вода, у якому вона стані і чи можна з неї напитися.</p><p class="dev">Аналог «часу очікування відповіді» в Riddle: одна побутова метафора на весь Акт 1.</p></div></div><div class="tl-row"><div class="tl-t">2:30–8:00</div><div class="tl-b"><h3>Акт 1. Драбина води: від Місяця до Енцелада</h3><p>Місяць: лід у полярних кратерах, «вода є, але в морозилці». Марс: полярні шапки і, за даними InSight, вода на глибині 11–20 км. Церера: розсоли. Європа: океан під кригою, води приблизно вдвічі більше, ніж у земних океанах. Ганімед: найбільший супутник, океан між шарами льоду. Енцелад: вода сама б’є гейзерами в космос. Титан: озера є, але з метану, а вода глибоко під ним. Кожен «перегляд квартири» закінчується жартом-вироком від ріелтора.</p><p class="dev">Кожен щабель цікавіший за попередній, вершина — Європа і Ганімед, щоб підвести до новини.</p></div></div><div class="tl-row"><div class="tl-t">8:00–8:30</div><div class="tl-b"><h3>Заперечення глядача №1</h3><p>«Окей, води повно. То пакуємо валізи на Європу?» Знижуємо очікування: «давайте хоча б порахуємо, скільки туди летіти».</p></div></div><div class="tl-row"><div class="tl-t">8:30–12:00</div><div class="tl-b"><h3>Акт 2. Дорога</h3><p>Europa Clipper стартував у жовтні 2024 і прибуде 11 квітня 2030, це 5,5 року дороги. JUICE прибуде 2031 і вийде на орбіту Ганімеда в грудні 2034. Сигнал від Юпітера йде 33–54 хвилини в один бік: прямий місток до відео Riddle про переписку. Радіація на поверхні Європи смертельна за лічені дні. Ганімед має власне магнітне поле, і радіації там значно менше. Тому, можливо, «переселяємось» на Ганімед, а не на Європу.</p><p class="dev">Як «рекорд + підступ» у Riddle: є вода, але є Юпітер, який її «охороняє».</p></div></div><div class="tl-row"><div class="tl-t">12:00–16:00</div><div class="tl-b"><h3>Заперечення №2 і Акт 3: «Просто пробуримо лід»</h3><p>Крига Європи — десятки кілометрів (оцінки різняться), Ганімеда — близько 150 км. Мінус 160 °C на поверхні, сили тяжіння 0,13–0,15 g, сонячного світла приблизно в 27 разів менше. Свіжа суперечка вчених 2026 року: одна група (Washington State University) показала, як поживні речовини можуть потрапляти з криги в океан. Інша (Washington University in St. Louis) вважає дно Європи холодним і спокійним, з малим запасом енергії для життя.</p><p class="dev">Рефрен-петля, як у Riddle: глибше, холодніше, темніше. Наукова суперечка — чесна інтрига без конспірології.</p></div></div><div class="tl-row"><div class="tl-t">16:00–16:30</div><div class="tl-b"><h3>Заперечення №3: «А якщо тераформувати, як у фільмі?»</h3><p>Місток до «Проєкту „Аве Марія“» з Ґослінгом (2026, найбільший старт року — $80,5M). Steelman: «припустімо, ми розв’язали дорогу, радіацію і буріння». І тут же: «головна проблема не в техніці, а в тому, що робить воду рідкою».</p><p class="dev">Аналог «уявімо гіпердвигун» у Riddle.</p></div></div><div class="tl-row"><div class="tl-t">16:30–21:00</div><div class="tl-b"><h3>Акт 4. Глибинне «чому»: що робить воду рідкою</h3><p>Ментальна модель: три «ручки» — температура, тиск, захист від радіації. На Землі їх тримає Сонце, атмосфера і магнітне поле. На Європі воду гріє не Сонце, а Юпітер: його гравітація постійно «м’яє» супутник, як антистрес-м’ячик (припливний нагрів). Головний переворот: та сама сила, що тримає океан рідким, робить поверхню смертельною. Юпітер і дає, і забирає. Тераформування: оцінки для Марса — від сотень до тисяч років.</p><p class="dev">Як модель «простір і час» у Riddle: одна наочна модель із застереженням «це спрощення».</p></div></div><div class="tl-row"><div class="tl-t">21:00–23:00</div><div class="tl-b"><h3>Фінал: від «неможливо» до надії</h3><p>Ми, можливо, ніколи туди не переїдемо. Але у 2030–2034 Clipper і JUICE відповідять на питання, чи є там життя. Якщо так, то життя — звичайне явище у Всесвіті, і ми не самі. Тепле завершення в стилі Riddle.</p><p class="dev">Особиста вставка посередині (аналог кота Baby) — на вибір ведучого.</p></div></div></div>
+</section>
+
+<section>
+  <h2>Факти, які треба перевірити перед записом</h2>
+  <p>Ці цифри я взяла із загальновідомих джерел, але окремо не перевіряла. Їх треба звірити з NASA або ESA:</p>
+  <ul>
+    <li>Обсяг океану Європи «приблизно вдвічі більше, ніж у земних океанах», а Ганімеда «більше, ніж на Землі».</li>
+    <li>Товщина криги: Європа (оцінки від кількох до 25+ км), Ганімед (близько 150 км).</li>
+    <li>Доза радіації на поверхні Європи і на Ганімеді.</li>
+    <li>Вода на Марсі на глибині 11–20 км (дані InSight) і розсоли на Церері.</li>
+    <li>Затримка сигналу до Юпітера 33–54 хвилини і «в 27 разів менше сонячного світла».</li>
+    <li>Оцінки часу тераформування Марса.</li>
+  </ul>
+</section>
+
+<p class="foot">Підготовлено 07.10.2026. Джерела: транскрипт Ridddle «Why Space Travel is Actually Impossible» (Nexlev), база відео Nexlev, ScienceDaily, Astrobiology.com, NASA.</p>
+</div>
