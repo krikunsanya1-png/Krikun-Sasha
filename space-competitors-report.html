@@ -1,0 +1,206 @@
+<title>Космічні конкуренти Riddle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: одна колонка звіту ~920px; таблиця конкурентів, далі блоки «чому працює», ідеї, обмеження */
+:root{
+  --bg:#f5f6fa; --surface:#ffffff; --ink:#151a2e; --muted:#5b6380; --line:#dfe2ec;
+  --accent:#b8740f; --accent-soft:#fbf0dc; --link:#2c4fb8;
+  --new:#1f8a5b; --new-soft:#ddf3e8; --mid:#a86a00; --mid-soft:#fdf0d6; --old:#c2482e; --old-soft:#fbe3dc;
+  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1020; --surface:#151a2e; --ink:#e7e9f3; --muted:#9aa1bd; --line:#2a3150;
+  --accent:#e9a63c; --accent-soft:#3a2a10; --link:#8fa8ff;
+  --new:#4fd197; --new-soft:#123a2a; --mid:#f0b54a; --mid-soft:#3a2c0f; --old:#ff8a6e; --old-soft:#3d1c15; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1020; --surface:#151a2e; --ink:#e7e9f3; --muted:#9aa1bd; --line:#2a3150;
+  --accent:#e9a63c; --accent-soft:#3a2a10; --link:#8fa8ff;
+  --new:#4fd197; --new-soft:#123a2a; --mid:#f0b54a; --mid-soft:#3a2c0f; --old:#ff8a6e; --old-soft:#3d1c15; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding:40px 16px 64px}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2{font-family:var(--f-display);text-wrap:balance;letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.2;font-weight:700}
+h2{font-size:19px;font-weight:500;padding-bottom:10px;border-bottom:1px solid var(--line)}
+h3{font-size:16px;margin:0;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.sub{color:var(--muted);font-size:14px;margin-top:10px}
+section{display:flex;flex-direction:column;gap:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.stat b{font-family:var(--f-display);font-size:22px;font-weight:700;display:block}
+.stat span{color:var(--muted);font-size:13px;line-height:1.4;display:block;margin-top:4px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+th{background:var(--ink);color:var(--bg);text-align:left;font-weight:500;padding:9px 10px;font-size:12.5px;white-space:nowrap}
+td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.n b{font-weight:600}
+td small{color:var(--muted);display:block;font-size:12px;line-height:1.4;margin-top:2px}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.p-new{background:var(--new-soft);color:var(--new)} .p-mid{background:var(--mid-soft);color:var(--mid)} .p-old{background:var(--old-soft);color:var(--old)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted);align-items:center}
+.factors{display:flex;flex-direction:column;gap:22px}
+.factor{display:grid;grid-template-columns:44px 1fr;gap:14px}
+.factor .num{font-family:var(--f-display);font-size:22px;color:var(--accent);font-weight:700;line-height:1.2}
+.factor > div{min-width:0;display:flex;flex-direction:column;gap:8px}
+.ev{font-size:13.5px;color:var(--muted);border-left:2px solid var(--line);padding-left:12px;display:flex;flex-direction:column;gap:3px}
+.ev .t{color:var(--ink)}
+code,.mono{font-family:var(--f-mono);font-size:12.5px;background:var(--accent-soft);padding:1px 6px;border-radius:4px;white-space:nowrap}
+.styles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card p{font-size:14px}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+.ideas li{font-size:14.5px}
+.ideas em{color:var(--muted);font-style:normal;font-size:13px}
+.foot{color:var(--muted);font-size:12.5px}
+@media (max-width:520px){.factor{grid-template-columns:1fr;gap:4px}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <h1>Космічні канали: нові конкуренти і в чому їхній успіх</h1>
+  <p class="sub">Продовження ресерчу від 7 жовтня 2026 · тема: неможливість польотів, відстані, масштаб, «страшні» планети · канали до 150k підписників · відео 8–40 хв · дані: Nexlev (пошук каналів, outliers, транскрипти, перегляд відео)</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><b>15 каналів</b><span>нових, яких не було в першому звіті</span></div>
+  <div class="stat"><b>6,1M</b><span>найкращий результат: Cosmic Lens, «Why Saturn is The Scariest Planet»</span></div>
+  <div class="stat"><b>6 із 15</b><span>каналів створено у 2026 році, з першими хітами за 1–3 місяці</span></div>
+  <div class="stat"><b>10–16 хв</b><span>довжина більшості відео з 1M+ переглядів у цій вибірці</span></div>
+</div>
+
+<section>
+  <h2>Нові конкуренти, відсортовано за найкращим відео</h2>
+  <div class="legend">
+    <span><span class="pill p-new">2026</span> канал створено цього року</span>
+    <span><span class="pill p-mid">2025</span> канал до року</span>
+    <span><span class="pill p-old">старий</span> старий акаунт або дата невідома</span>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Канал</th><th>Створено</th><th>Підписники</th><th>Сер. перегляди</th><th>Найкраще відео</th><th>Перегляди</th><th>Довж.</th><th>Мова</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://www.youtube.com/channel/UCjz1107N5-17ZQOz1g6XaOQ">Cosmic Lens</a><small>45 відео, 13,1M переглядів</small></td><td><span class="pill p-mid">10.2025</span></td><td class="n">99,7k</td><td class="n">291k</td><td><a href="https://www.youtube.com/watch?v=0SEU_ggHdSs">Why Saturn is The Scariest Planet (It’s Not Peaceful)</a><small>ще: <a href="https://www.youtube.com/watch?v=Rc56-fc3iiU">Pluto is NOT What We Thought It Was… (Terrifying)</a>, 2,5M</small></td><td class="n"><b>6,1M</b></td><td class="n">10:25</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCZd9f77kiWs7m3uH3Y3NzNA">Cosmicus</a><small>166 відео, ~$8,8k/міс (оцінка Nexlev)</small></td><td><span class="pill p-new">01.2026</span></td><td class="n">99,5k</td><td class="n">148k</td><td><a href="https://www.youtube.com/watch?v=bjPItpvmTKU">Nobel Prize Winner Warns: “This Isn’t Our Universe” — James Webb Found Something Strange</a><small>ще: <a href="https://www.youtube.com/watch?v=gZsO_2Jmkb8">Why Jupiter is The Scariest Planet (It’s Not Peaceful)</a>, 2,0M, 10:41</small></td><td class="n"><b>3,0M</b></td><td class="n">26:58</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UC5q902RpdLkzhzmm8kGvQXg">ABISMO</a><small>35 відео, Колумбія, ~1 відео/тиждень</small></td><td><span class="pill p-new">04.2026</span></td><td class="n">39,5k</td><td class="n">224k</td><td><a href="https://www.youtube.com/watch?v=4wDVY4xylgk">How long does it take to cross A LIGHT YEAR? (the answer will hurt)</a><small>ще: <a href="https://www.youtube.com/watch?v=VRE3nTqFJO0">Why Is It Impossible to Live on Titan?</a> 916k; «Why Is the Sky Dark? (It Shouldn’t Be)» 591k</small></td><td class="n"><b>2,3M</b></td><td class="n">11:26</td><td>ES + доріжки</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCD9UIa4WDqVmJiMsQ4UMM0A">X-HORIZON</a><small>30 відео, 5,2M переглядів</small></td><td><span class="pill p-new">02.2026</span></td><td class="n">31,8k</td><td class="n">172k</td><td><a href="https://www.youtube.com/watch?v=gzj-iFN2hv4">Por Qué Es Imposible Viajar a Saturno</a><small>ще: <a href="https://www.youtube.com/watch?v=k2QcnqjBQq4">…Viajar A Andrómeda</a> 1,5M; …a Urano 361k</small></td><td class="n"><b>1,5M</b></td><td class="n">15:10</td><td>ES</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCMKfD-TM9abBRMDk_e1J4-A">Cosmic Void</a><small>10 відео, один хіт</small></td><td><span class="pill p-new">03.2026</span></td><td class="n">6,5k</td><td class="n">112k</td><td><a href="https://www.youtube.com/watch?v=Em3HCTeTlQg">Why TON 618 is The Scariest Black Hole in the Universe</a></td><td class="n"><b>1,0M</b></td><td class="n">16:06</td><td>EN</td></tr>
+      <tr><td>Space Buddy<small>дату каналу не перевіряла</small></td><td><span class="pill p-old">?</span></td><td class="n">6,6k</td><td class="n">—</td><td><a href="https://www.youtube.com/watch?v=c8U9B2-nKr0">10 Scariest Paradoxes in Physics That Prove Reality Is Not What We Think</a></td><td class="n"><b>1,0M</b></td><td class="n">16:35</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UC70y-ib9gQ3d0vkw9cXbj4w">Cosmic Horizons</a><small>перезапуск старого акаунта</small></td><td><span class="pill p-old">2021</span></td><td class="n">12,9k</td><td class="n">39k</td><td><a href="https://www.youtube.com/watch?v=bfD3iAex60E">The Cosmic Theory Scientists Are Too Afraid To Talk About</a><small>ще: «The Soviet Probe That Photographed Something Moving On Venus» 503k</small></td><td class="n"><b>1,0M</b></td><td class="n">14:45</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCQVKHQydcoIVN6Xfx3-72MQ">Astrovía</a><small>новинний формат</small></td><td><span class="pill p-old">?</span></td><td class="n">54,8k</td><td class="n">232k</td><td><a href="https://www.youtube.com/watch?v=0oM_etZBhrY">HACE 7 MINUTOS: La Voyager 1 Captó Algo en el Espacio que NO Podemos Explicar</a></td><td class="n"><b>799k</b></td><td class="n">12:00</td><td>ES</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UC9FK-91m4lyuP5m8GMcecCQ">Misterios del Espacio</a><small>134 відео</small></td><td><span class="pill p-mid">09.2025</span></td><td class="n">15,1k</td><td class="n">25k</td><td><a href="https://www.youtube.com/watch?v=z0JiMz00mwg">Why Anyone Who Goes to Mars Will Never Return</a><small>ще: «The True Scale of the Universe…» 475k, 26:48</small></td><td class="n"><b>752k</b></td><td class="n">22:30</td><td>ES</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCTETWLwIioaWHXhMVeD-KZw">Cozy Universe</a><small>8 відео</small></td><td><span class="pill p-old">?</span></td><td class="n">2,2k</td><td class="n">51k</td><td><a href="https://www.youtube.com/watch?v=17bIxK_Ynjg">Jupiter Is Not A Gas Giant (We’ve Been Wrong For 400 Years)</a></td><td class="n"><b>406k</b></td><td class="n">23:06</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCW3hXljpNwGsDGTLN86wuWg">Quantum al Día</a><small>Іспанія</small></td><td><span class="pill p-old">?</span></td><td class="n">30,1k</td><td class="n">47k</td><td><a href="https://www.youtube.com/watch?v=DyFcMLCms8Y">Por qué los humanos pueden llegar a Marte… pero regresar sea IMPOSIBLE</a></td><td class="n"><b>371k</b></td><td class="n">35:22</td><td>ES</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCV2Y28MZHtrj0Hl-bcnS9aA">Big Space Explainer</a><small>8 відео</small></td><td><span class="pill p-new">02.2026</span></td><td class="n">6,4k</td><td class="n">91k</td><td><a href="https://www.youtube.com/watch?v=etJuVmXoT4M">Every Way the Universe Could End Explained in 18 Minutes</a><small>ще: «Every Type of Star in the Universe Explained in 17 Minutes» 261k</small></td><td class="n"><b>368k</b></td><td class="n">17:48</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UCppyAe3EEAGcGknEr4C4H-A">Beyond The Rings</a><small>81 відео, Бразилія</small></td><td><span class="pill p-mid">11.2025</span></td><td class="n">11,6k</td><td class="n">32k</td><td><a href="https://www.youtube.com/watch?v=DFzEAleKwhU">A Journey to One of the Largest Stars Ever Discovered | UY Scuti</a><small>ще: «What Voyager 1 Will See in 1 Trillion Years» 351k</small></td><td class="n"><b>351k</b></td><td class="n">8:03</td><td>EN</td></tr>
+      <tr><td><a href="https://www.youtube.com/channel/UC0ITJt_6_Sfyw724I_zNfmg">Spaceman Noodle</a><small>114 відео</small></td><td><span class="pill p-old">?</span></td><td class="n">7,4k</td><td class="n">18k</td><td><a href="https://www.youtube.com/watch?v=N_d2sfRrPeA">10 Insane Distances in Space That Will Break Your Sense of Reality</a></td><td class="n"><b>240k</b></td><td class="n">21:03</td><td>EN</td></tr>
+      <tr><td>Jost<small>канал 2021, уже згадувався</small></td><td><span class="pill p-old">2021</span></td><td class="n">27,3k</td><td class="n">149k</td><td>How Long Would It Really Take To Cross Our Galaxy? (The Answer Is Disturbing)</td><td class="n"><b>193k</b></td><td class="n">10:52</td><td>EN</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>У чому їхній успіх</h2>
+  <div class="factors">
+
+    <div class="factor"><div class="num">1</div><div>
+      <h3>Формула «Чому [відомий об’єкт] найстрашніший»</h3>
+      <p>Найбільший хіт вибірки зламав очікування: Сатурн вважають красивим, а відео обіцяє жах. Інші канали скопіювали формулу майже дослівно, і вона спрацювала на кількох з них. Це найсильніша знахідка цього ресерчу.</p>
+      <div class="ev">
+        <span class="t">Cosmic Lens · Why Saturn is The Scariest Planet (It’s Not Peaceful) · 6,1M</span>
+        <span class="t">Cosmicus · Why Jupiter is The Scariest Planet (It’s Not Peaceful) · 2,0M</span>
+        <span class="t">Cosmic Void · Why TON 618 is The Scariest Black Hole in the Universe · 1,0M</span>
+        <span>X-HORIZON · Por Qué Neptuno Es El Planeta Más Aterrador · 334k · Cosmic Lens · NEPTUNE: The Terrifying Secrets… · 602k</span>
+      </div>
+    </div></div>
+
+    <div class="factor"><div class="num">2</div><div>
+      <h3>Серія з одного шаблону: «Чому неможливо полетіти на X»</h3>
+      <p>X-HORIZON зробив серію з однаковою назвою і поміняв лише планету. Два відео з серії мають по 1,5M. ABISMO і Miralex роблять те саме. Серія дає готовий список тем, а глядач, якому сподобалось одне відео, отримує наступне в рекомендаціях.</p>
+      <div class="ev">
+        <span class="t">X-HORIZON · Saturno 1,5M · Andrómeda 1,5M · Urano 361k</span>
+        <span class="t">ABISMO · Júpiter 424k · Titan 916k</span>
+        <span>Miralex (з першого звіту) · Planets 1,86M · Andrômeda 385k · Netuno 157k</span>
+      </div>
+    </div></div>
+
+    <div class="factor"><div class="num">3</div><div>
+      <h3>Дужки в кінці назви з емоційним вироком</h3>
+      <p>Майже кожен хіт має коротку приписку в дужках. Вона додає емоцію або заперечує очікування глядача.</p>
+      <div class="ev"><span class="t"><code>(It’s Not Peaceful)</code> <code>(Terrifying)</code> <code>(the answer will hurt)</code> <code>(The Answer Is Disturbing)</code> <code>(It Shouldn’t Be)</code> <code>(Even Though It Looks Like Earth)</code> <code>(We’ve Been Wrong For 400 Years)</code> <code>(The Loneliest Object)</code></span></div>
+    </div></div>
+
+    <div class="factor"><div class="num">4</div><div>
+      <h3>Найбільші хіти коротші, ніж у Riddle</h3>
+      <p>Відео з 1M+ у цій вибірці переважно 10–16 хвилин: 10:25, 10:41, 11:26, 12:45, 15:10, 16:06. Довгі ролики теж працюють (Cosmicus 27 хв має 3,0M, Cosmic Signal 30–37 хв по 500–660k), але найвищі піки дають короткі. У Riddle референси 14–26 хв, тож 12–16 хв лишаються в межах формату.</p>
+    </div></div>
+
+    <div class="factor"><div class="num">5</div><div>
+      <h3>Хук у перші 10–30 секунд</h3>
+      <p>Я прочитала транскрипти 6 хітів. У всіх хук будується на одному з трьох прийомів:</p>
+      <ul>
+        <li><b>Звук або образ, що ламає очікування.</b> Cosmic Lens відкриває справжнім радіосигналом Сатурна і чорним екраном: «Listen to that sound… That is Saturn screaming into the void… beauty is the ultimate trap».</li>
+        <li><b>Рекорд плюс побутове порівняння.</b> ABISMO: найшвидший апарат людства, 690 000 км/год. Політ Мадрид–Нью-Йорк він пролетів би за 30 секунд. А світловий рік він долає зі швидкістю, з якою росте ніготь.</li>
+        <li><b>«Уяви, що ти…» і обіцянка.</b> Cosmicus: «Imagine you’re aboard a spacecraft approaching Jupiter… by the end of this video, you’ll understand why…». Звертання «you» звучить у тексті 19 разів.</li>
+      </ul>
+    </div></div>
+
+    <div class="factor"><div class="num">6</div><div>
+      <h3>Два візуальні стилі, обидва без обличчя</h3>
+      <p>Я переглянула перші 75 секунд двох найбільших хітів:</p>
+      <div class="styles">
+        <div class="card"><h3>Кінематографічний (Cosmic Lens)</h3><p>Повільні 3D-рендери планет, близько 8 склейок на хвилину, плавні панорами й наближення. Темна контрастна гамма, тривожний дрон у звуці, глибокий драматичний чоловічий голос. Темп мови близько 108 слів на хвилину.</p></div>
+        <div class="card"><h3>Динамічний (ABISMO)</h3><p>3D-рендери, стоки та інфографіка з великими цифрами (спідометр до 690 000 км/год), 30–40 склейок на хвилину. Кожне порівняння показане візуально. Спокійний авторитетний голос, близько 110 слів на хвилину.</p></div>
+      </div>
+      <p>Обидва хіти начитано повільно (108–110 слів/хв), а списки на зразок «10 парадоксів» мають 160 слів/хв. Це спостереження на двох відео, а не правило.</p>
+    </div></div>
+
+    <div class="factor"><div class="num">7</div><div>
+      <h3>Знайомі об’єкти та рекордсмени</h3>
+      <p>Хіти зосереджені навколо кількох тем: планети, які всі знають (Сатурн, Юпітер, Плутон, Нептун, Титан), рекордсмени (TON 618, UY Scuti, Stephenson 2-18, Phoenix A), Voyager 1, світловий рік. Новинні хуки «James Webb / Voyager знайшов щось неможливе» теж збирають сотні тисяч, але це інший жанр.</p>
+    </div></div>
+
+    <div class="factor"><div class="num">8</div><div>
+      <h3>Іспаномовний ринок і мовні доріжки</h3>
+      <p>П’ять із 15 каналів іспаномовні: ABISMO, X-HORIZON, Astrovía, Quantum al Día, Misterios del Espacio. ABISMO, як і Miralex, використовує мовні доріжки: транскрипт хіта з 2,3M віддається арабською, а Nexlev показує англійську назву. Один ролик збирає перегляди одразу в кількох мовних аудиторіях.</p>
+    </div></div>
+
+    <div class="factor"><div class="num">9</div><div>
+      <h3>Фінал, що просить коментар</h3>
+      <p>ABISMO закінчує відео вибором: «Ти з тих, хто спокійно лишається вдома, чи з тих, хто кидає пляшки в океан? Напиши в коментарях». Cosmic Lens закінчує образом, який замикає хук: «beauty can be deadly». Більшість інших каналів закінчують звичайним «підпишись».</p>
+    </div></div>
+
+  </div>
+</section>
+
+<section>
+  <h2>Ідеї тем за перевіреними формулами</h2>
+  <ul class="ideas">
+    <li>Чому Уран — найстрашніша планета (вона не така, як здається) <em>· формула 1; у вибірці Уран був лише в серії «неможливо полетіти» (X-HORIZON, 361k)</em></li>
+    <li>Чому Венера — найстрашніша планета (це не близнючка Землі) <em>· формула 1</em></li>
+    <li>Чому неможливо полетіти на Меркурій, хоча він найближчий до Сонця <em>· формула 2, перевернуте очікування</em></li>
+    <li>Чому неможливо приземлитися на Юпітер (там немає землі) <em>· формула 2, хук з транскрипту X-HORIZON про Сатурн</em></li>
+    <li>Скільки летіти до найближчої зірки (відповідь вам не сподобається) <em>· формула 3 + рекорд і побутове порівняння</em></li>
+    <li>Чому Європа найнебезпечніший супутник (під кригою океан) <em>· формула 1; Titan у ABISMO зібрав 916k</em></li>
+    <li>Де зараз Voyager 1 і що з ним буде через мільярд років <em>· перевірено Cosmic Lens 634k, Beyond The Rings 351k</em></li>
+    <li>Чому Сонце не дасть нам вийти з площини Сонячної системи <em>· перевірено The Astro Mind 430k, тема Riddle «над і під Сонцем»</em></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Обмеження</h2>
+  <ul>
+    <li>Підписники, середні перегляди та дохід — оцінки Nexlev. Дати виходу відео в Nexlev округлені, тому їх у таблиці немає.</li>
+    <li>Транскрипти прочитано для 6 хітів, візуальний стиль перевірено лише для двох (перші 75 секунд).</li>
+    <li>Дати створення каналів Space Buddy, Astrovía, Cozy Universe, Quantum al Día і Spaceman Noodle не перевіряла.</li>
+    <li>Cosmic Lens і Cosmicus мають близько 100k підписників, а Astrovía і Quantum al Día працюють у суміжних жанрах (новини та довгі ролики). Вони ближчі до верхньої межі вибірки, ніж до старту з нуля.</li>
+  </ul>
+</section>
+
+<p class="foot">Підготовлено 07.10.2026. Джерела даних: Nexlev (Niche Finder, Faceless Outliers, Channel Outliers, транскрипти, AI-перегляд відео).</p>
+</div>
